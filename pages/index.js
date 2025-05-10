@@ -49,9 +49,11 @@ export default function Home({ puzzle }) {
         </div>
       )}
 
-      <div className={styles.clueBox}>
-        <strong>Clue #{revealedClues}:</strong> {puzzle.clues[revealedClues - 1]}
-      </div>
+      {puzzle.clues.slice(0, revealedClues).map((clue, index) => (
+  <div key={index} className={styles.clueBox}>
+    <strong>Clue #{index + 1}:</strong> {clue}
+  </div>
+))}
 
       <input
         type="text"
