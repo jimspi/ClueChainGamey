@@ -70,7 +70,20 @@ export default function Home({ puzzle }) {
 
 export async function getServerSideProps() {
   const puzzles = require('../puzzles.json');
-  const index = Math.floor(Date.now() / (1000 * 60 * 60 * 24)) % puzzles.length;
-  const puzzle = puzzles[index];
+
+  // Get current time in MST (UTC-7)
+  const now = new Date();
+  const mstOffset = 7 * 60; // minutes behind UTC
+  const localTime = new Date(now.getTime() - (mstOffset * 60000));
+
+  // Start tracking puzzles from May 13, 2025 at 12:00 AM MST
+  const startDate = new Date('2025-05-13T00:00:00-07:00');
+  const diffInTime = localTime - startDate;
+  const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+  const index = diffInDays % puzzles.length;
+  const puzzle = puzzles[index] || puzzles[0];
+
   return { props: { puzzle } };
 }
+
